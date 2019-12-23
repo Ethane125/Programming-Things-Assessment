@@ -33,6 +33,7 @@
 			this.btnRHT = new System.Windows.Forms.Button();
 			this.btnRVS = new System.Windows.Forms.Button();
 			this.btnStop = new System.Windows.Forms.Button();
+			this.btnAutoMove = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnFWD
@@ -85,11 +86,22 @@
 			this.btnStop.UseVisualStyleBackColor = true;
 			this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
 			// 
+			// btnAutoMove
+			// 
+			this.btnAutoMove.Location = new System.Drawing.Point(575, 135);
+			this.btnAutoMove.Name = "btnAutoMove";
+			this.btnAutoMove.Size = new System.Drawing.Size(167, 89);
+			this.btnAutoMove.TabIndex = 5;
+			this.btnAutoMove.Text = "Auto move";
+			this.btnAutoMove.UseVisualStyleBackColor = true;
+			this.btnAutoMove.Click += new System.EventHandler(this.btnAutoMove_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btnAutoMove);
 			this.Controls.Add(this.btnStop);
 			this.Controls.Add(this.btnRVS);
 			this.Controls.Add(this.btnRHT);
@@ -108,6 +120,7 @@
 		private System.Windows.Forms.Button btnRHT;
 		private System.Windows.Forms.Button btnRVS;
 		private System.Windows.Forms.Button btnStop;
+		private System.Windows.Forms.Button btnAutoMove;
 	}
 }
 

@@ -49,5 +49,10 @@ namespace IOT
 		{
 			serialPort.Write(" ");
 		}
+
+		private void btnAutoMove_Click(object sender, EventArgs e)
+		{
+			serialPort.Write("t");
+		}
 	}
 }

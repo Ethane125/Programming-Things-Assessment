@@ -23,6 +23,25 @@ namespace IOT
 			serialPort.BaudRate = 9600;
 
 			serialPort.Open();
+			serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+
+		}
+
+		private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+		{
+
+			SerialPort sp = (SerialPort)sender;
+			UpdateOutputTextBox(sp.ReadExisting());
+		}
+
+		public void UpdateOutputTextBox(string value)
+		{
+			if (InvokeRequired)
+			{
+				this.Invoke(new Action<string>(UpdateOutputTextBox), new object[] { value });
+				return;
+			}
+			txtOutput.Text += value;
 		}
 
 		private void btnFWD_Click(object sender, EventArgs e)
@@ -52,7 +71,27 @@ namespace IOT
 
 		private void btnAutoMove_Click(object sender, EventArgs e)
 		{
+			txtOutput.Clear();
 			serialPort.Write("t");
+			btnFWD.Enabled = false;
+			btnLFT.Enabled = false;
+			btnRHT.Enabled = false;
+			btnRVS.Enabled = false;
+			btnStop.Enabled = false;
+
+
+		}
+
+		private void txtOutput_TextChanged(object sender, EventArgs e)
+		{
+			if(txtOutput.Text == "Reached a wall, changing to manual control, press the 'auto move' button to resume automatic movement.\n")
+			{
+				btnFWD.Enabled = true;
+				btnLFT.Enabled = true;
+				btnRHT.Enabled = true;
+				btnRVS.Enabled = true;
+				btnStop.Enabled = true;
+			}
 		}
 	}
 }

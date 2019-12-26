@@ -5,7 +5,7 @@
 //Serial communicates over USB cable
 Zumo32U4Motors motors;
 Zumo32U4LineSensors lineSensors;
-int maxSpeed = 75;
+int maxSpeed = 50;
 #define NUM_SENSORS 3
   uint16_t lineSensorValues[NUM_SENSORS];
  uint16_t leftInitial, centreInitial, rightInitial;
@@ -28,20 +28,56 @@ void setup() {
 }
 
 void loop() {
-  if(!start){
-    motors.setSpeeds(0,0);
-  }
-  //ledRed(0);
-  // put your main code here, to run repeatedly:
+  //if(!start){
+   // motors.setSpeeds(0,0);
+  //}
+
   
   int incomingByte = 0; // for incoming serial data
 
   if (Serial1.available() > 0) {
     // read the incoming byte:
     incomingByte = Serial1.read();
-    if (incomingByte == 116){
-      start = !start;
-      }
+    //if (incomingByte == 116){
+    //  start = !start;
+    //  }
+    switch(incomingByte){
+      //61 =
+      //45 -
+      case 116:
+        start = !start;
+        if(!start){ motors.setSpeeds(0,0); }
+      break;
+      case 45:  //-
+          maxSpeed = maxSpeed - 25;
+        break;
+      case 61:  //=
+          maxSpeed = maxSpeed + 25;
+        break;
+      case 32:  //w
+        motors.setSpeeds(0,0);
+        break;
+      case 119: //w
+          motors.setSpeeds(maxSpeed,maxSpeed);
+        break;
+      case 100: //d
+
+          motors.setLeftSpeed(maxSpeed*2);
+          motors.setRightSpeed(((maxSpeed*2) * -1));
+
+        break;
+        case 97: //a
+
+          motors.setRightSpeed(maxSpeed*2);
+          motors.setLeftSpeed(((maxSpeed*2) * -1));
+
+        break;
+        case 115: //s
+
+          motors.setSpeeds((maxSpeed*-1),(maxSpeed*-1));
+
+        break;
+    }
 
   }
   if(start){
@@ -70,10 +106,12 @@ void move(){
   //Serial.println(lineSensorValues[0]);
   //Serial.println(lineSensorValues[1]);
   //Serial.println(lineSensorValues[2]);
-  motors.setSpeeds(50,50);
+  motors.setSpeeds(maxSpeed,maxSpeed);
   if(lineSensorValues[1] > centreInitial){
             Serial.println("centre line breached");
             motors.setSpeeds(0,0);
+            Serial1.println("Reached a wall, changing to manual control, press the 'auto move' button to resume automatic movement.");
+            start = false;
           }else{
             if(lineSensorValues[0] > leftInitial){
             Serial.println("left line breached");

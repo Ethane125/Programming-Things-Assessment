@@ -93,5 +93,15 @@ namespace IOT
 				btnStop.Enabled = true;
 			}
 		}
+
+		private void btnTurnLeft_Click(object sender, EventArgs e)
+		{
+			serialPort.Write("l");
+		}
+
+		private void btnTurnRight_Click(object sender, EventArgs e)
+		{
+			serialPort.Write("r");
+		}
 	}
 }

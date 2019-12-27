@@ -35,6 +35,8 @@
 			this.btnStop = new System.Windows.Forms.Button();
 			this.btnAutoMove = new System.Windows.Forms.Button();
 			this.txtOutput = new System.Windows.Forms.RichTextBox();
+			this.btnTurnLeft = new System.Windows.Forms.Button();
+			this.btnTurnRight = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnFWD
@@ -107,11 +109,33 @@
 			this.txtOutput.Text = "";
 			this.txtOutput.TextChanged += new System.EventHandler(this.txtOutput_TextChanged);
 			// 
+			// btnTurnLeft
+			// 
+			this.btnTurnLeft.Location = new System.Drawing.Point(96, 580);
+			this.btnTurnLeft.Name = "btnTurnLeft";
+			this.btnTurnLeft.Size = new System.Drawing.Size(123, 75);
+			this.btnTurnLeft.TabIndex = 7;
+			this.btnTurnLeft.Text = "turn left 90°";
+			this.btnTurnLeft.UseVisualStyleBackColor = true;
+			this.btnTurnLeft.Click += new System.EventHandler(this.btnTurnLeft_Click);
+			// 
+			// btnTurnRight
+			// 
+			this.btnTurnRight.Location = new System.Drawing.Point(247, 580);
+			this.btnTurnRight.Name = "btnTurnRight";
+			this.btnTurnRight.Size = new System.Drawing.Size(123, 75);
+			this.btnTurnRight.TabIndex = 8;
+			this.btnTurnRight.Text = "turn right 90°";
+			this.btnTurnRight.UseVisualStyleBackColor = true;
+			this.btnTurnRight.Click += new System.EventHandler(this.btnTurnRight_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1443, 760);
+			this.Controls.Add(this.btnTurnRight);
+			this.Controls.Add(this.btnTurnLeft);
 			this.Controls.Add(this.txtOutput);
 			this.Controls.Add(this.btnAutoMove);
 			this.Controls.Add(this.btnStop);
@@ -134,6 +158,8 @@
 		private System.Windows.Forms.Button btnStop;
 		private System.Windows.Forms.Button btnAutoMove;
 		private System.Windows.Forms.RichTextBox txtOutput;
+		private System.Windows.Forms.Button btnTurnLeft;
+		private System.Windows.Forms.Button btnTurnRight;
 	}
 }
 

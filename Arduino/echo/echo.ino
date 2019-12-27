@@ -5,6 +5,7 @@
 //Serial communicates over USB cable
 Zumo32U4Motors motors;
 Zumo32U4LineSensors lineSensors;
+Zumo32U4Encoders encoders;
 int maxSpeed = 50;
 #define NUM_SENSORS 3
   uint16_t lineSensorValues[NUM_SENSORS];
@@ -31,7 +32,7 @@ void loop() {
   //if(!start){
    // motors.setSpeeds(0,0);
   //}
-
+  
   
   int incomingByte = 0; // for incoming serial data
 
@@ -57,6 +58,12 @@ void loop() {
       case 32:  //w
         motors.setSpeeds(0,0);
         break;
+      case 108: //l
+        turn90Left();
+      break;
+      case 114: //r
+        turn90Right();
+      break;
       case 119: //w
           motors.setSpeeds(maxSpeed,maxSpeed);
         break;
@@ -67,7 +74,6 @@ void loop() {
 
         break;
         case 97: //a
-
           motors.setRightSpeed(maxSpeed*2);
           motors.setLeftSpeed(((maxSpeed*2) * -1));
 
@@ -135,3 +141,27 @@ void adjustLeft(){
   motors.setRightSpeed(100);
   motors.setLeftSpeed(-100);
   }
+
+void turn90Left(){
+  int16_t initialLeft = encoders.getCountsLeft();
+  int16_t left = initialLeft;
+
+  while((initialLeft + -590) < left){
+    motors.setRightSpeed(maxSpeed*2);
+    motors.setLeftSpeed(((maxSpeed*2) * -1));
+    left = encoders.getCountsLeft();
+  }
+  motors.setSpeeds(0,0);
+}
+
+void turn90Right(){
+  int16_t initialRight = encoders.getCountsLeft();
+  int16_t right = initialRight;
+
+  while((initialRight + 545) > right){
+    motors.setLeftSpeed(maxSpeed*2);
+    motors.setRightSpeed(((maxSpeed*2) * -1));
+    right = encoders.getCountsLeft();
+  }
+  motors.setSpeeds(0,0);
+}

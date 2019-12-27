@@ -24,6 +24,8 @@ namespace IOT
 
 			serialPort.Open();
 			serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+			btnTurnLeft.Enabled = false;
+			btnTurnRight.Enabled = false;
 
 		}
 
@@ -73,35 +75,52 @@ namespace IOT
 		{
 			txtOutput.Clear();
 			serialPort.Write("t");
-			btnFWD.Enabled = false;
-			btnLFT.Enabled = false;
-			btnRHT.Enabled = false;
-			btnRVS.Enabled = false;
-			btnStop.Enabled = false;
+			//btnFWD.Enabled = false;
+			//btnLFT.Enabled = false;
+			//btnRHT.Enabled = false;
+			//btnRVS.Enabled = false;
+			//btnStop.Enabled = false;
+			btnTurnLeft.Enabled = false;
+			btnTurnRight.Enabled = false;
 
 
 		}
 
 		private void txtOutput_TextChanged(object sender, EventArgs e)
 		{
-			if(txtOutput.Text == "Reached a wall, changing to manual control, press the 'auto move' button to resume automatic movement.\n")
+			if(txtOutput.Text == "Reached a wall, Turn the zumo either left or right\n")
 			{
-				btnFWD.Enabled = true;
-				btnLFT.Enabled = true;
-				btnRHT.Enabled = true;
-				btnRVS.Enabled = true;
-				btnStop.Enabled = true;
+				//btnFWD.Enabled = true;
+				//btnLFT.Enabled = true;
+				//btnRHT.Enabled = true;
+				//btnRVS.Enabled = true;
+				//btnStop.Enabled = true;
+				btnTurnLeft.Enabled = true;
+				btnTurnRight.Enabled = true;
+			}
+			if (txtOutput.Text == "Left turn complete, swapping to auto movement\n" || txtOutput.Text == "Right turn complete, swapping to auto movement\n")
+			{
+				btnTurnLeft.Enabled = false;
+				btnTurnRight.Enabled = false;
+				serialPort.Write("t");
+				txtOutput.Clear();
 			}
 		}
 
 		private void btnTurnLeft_Click(object sender, EventArgs e)
 		{
 			serialPort.Write("l");
+			btnTurnLeft.Enabled = false;
+			btnTurnRight.Enabled = false;
+			txtOutput.Clear();
 		}
 
 		private void btnTurnRight_Click(object sender, EventArgs e)
 		{
 			serialPort.Write("r");
+			btnTurnLeft.Enabled = false;
+			btnTurnRight.Enabled = false;
+			txtOutput.Clear();
 		}
 	}
 }

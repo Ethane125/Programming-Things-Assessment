@@ -116,7 +116,7 @@ void move(){
   if(lineSensorValues[1] > centreInitial){
             Serial.println("centre line breached");
             motors.setSpeeds(0,0);
-            Serial1.println("Reached a wall, changing to manual control, press the 'auto move' button to resume automatic movement.");
+            Serial1.println("Reached a wall, Turn the zumo either left or right");
             start = false;
           }else{
             if(lineSensorValues[0] > leftInitial){
@@ -152,6 +152,7 @@ void turn90Left(){
     left = encoders.getCountsLeft();
   }
   motors.setSpeeds(0,0);
+  Serial1.println("Left turn complete, swapping to auto movement");
 }
 
 void turn90Right(){
@@ -164,4 +165,5 @@ void turn90Right(){
     right = encoders.getCountsLeft();
   }
   motors.setSpeeds(0,0);
+  Serial1.println("Right turn complete, swapping to auto movement");
 }

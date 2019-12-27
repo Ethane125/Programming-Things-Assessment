@@ -41,6 +41,7 @@
 			// 
 			// btnFWD
 			// 
+			this.btnFWD.Enabled = false;
 			this.btnFWD.Location = new System.Drawing.Point(247, 39);
 			this.btnFWD.Name = "btnFWD";
 			this.btnFWD.Size = new System.Drawing.Size(123, 75);
@@ -51,6 +52,7 @@
 			// 
 			// btnLFT
 			// 
+			this.btnLFT.Enabled = false;
 			this.btnLFT.Location = new System.Drawing.Point(96, 142);
 			this.btnLFT.Name = "btnLFT";
 			this.btnLFT.Size = new System.Drawing.Size(123, 75);
@@ -61,6 +63,7 @@
 			// 
 			// btnRHT
 			// 
+			this.btnRHT.Enabled = false;
 			this.btnRHT.Location = new System.Drawing.Point(396, 142);
 			this.btnRHT.Name = "btnRHT";
 			this.btnRHT.Size = new System.Drawing.Size(123, 75);
@@ -71,6 +74,7 @@
 			// 
 			// btnRVS
 			// 
+			this.btnRVS.Enabled = false;
 			this.btnRVS.Location = new System.Drawing.Point(247, 245);
 			this.btnRVS.Name = "btnRVS";
 			this.btnRVS.Size = new System.Drawing.Size(123, 75);
@@ -81,6 +85,7 @@
 			// 
 			// btnStop
 			// 
+			this.btnStop.Enabled = false;
 			this.btnStop.Location = new System.Drawing.Point(225, 120);
 			this.btnStop.Name = "btnStop";
 			this.btnStop.Size = new System.Drawing.Size(165, 119);
@@ -111,7 +116,7 @@
 			// 
 			// btnTurnLeft
 			// 
-			this.btnTurnLeft.Location = new System.Drawing.Point(96, 580);
+			this.btnTurnLeft.Location = new System.Drawing.Point(111, 525);
 			this.btnTurnLeft.Name = "btnTurnLeft";
 			this.btnTurnLeft.Size = new System.Drawing.Size(123, 75);
 			this.btnTurnLeft.TabIndex = 7;
@@ -121,7 +126,7 @@
 			// 
 			// btnTurnRight
 			// 
-			this.btnTurnRight.Location = new System.Drawing.Point(247, 580);
+			this.btnTurnRight.Location = new System.Drawing.Point(344, 525);
 			this.btnTurnRight.Name = "btnTurnRight";
 			this.btnTurnRight.Size = new System.Drawing.Size(123, 75);
 			this.btnTurnRight.TabIndex = 8;

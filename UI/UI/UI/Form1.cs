@@ -122,5 +122,20 @@ namespace IOT
 			btnTurnRight.Enabled = false;
 			txtOutput.Clear();
 		}
+
+		private void btnRoom_Click(object sender, EventArgs e)
+		{
+			serialPort.Write("o");
+		}
+
+		private void btnTestleft_Click(object sender, EventArgs e)
+		{
+			serialPort.Write("l");
+		}
+
+		private void btnTestRight_Click(object sender, EventArgs e)
+		{
+			serialPort.Write("r");
+		}
 	}
 }

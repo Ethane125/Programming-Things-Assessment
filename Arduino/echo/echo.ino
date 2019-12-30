@@ -6,6 +6,7 @@
 //Serial communicates over USB cable
 Zumo32U4Motors motors;
 Zumo32U4LineSensors lineSensors;
+Zumo32U4ProximitySensors proxSensors;
 Zumo32U4Encoders encoders;
 L3G gyro;
 int maxSpeed = 50;
@@ -14,8 +15,16 @@ int maxSpeed = 50;
  uint16_t leftInitial, centreInitial, rightInitial;
  bool start = false;
  bool roomFound = false;
+enum Direction {left, right};
 
- 
+struct room{
+  int roomNumber;
+  Direction roomDirection;
+  bool empty;
+};
+
+struct room rooms[3];
+ int roomCounter = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial1.begin(9600);
@@ -23,6 +32,7 @@ void setup() {
   ledRed(0);
   
   lineSensors.initThreeSensors();
+  proxSensors.initThreeSensors();
   lineSensors.read(lineSensorValues,true);
   leftInitial = lineSensorValues[0] + 500;
   centreInitial = lineSensorValues[0] + 50;
@@ -40,6 +50,11 @@ void loop() {
   
   //turnSensorUpdate();
   //Serial.println(getRotationAngle());
+
+
+    proxSensors.read();
+    Serial.println(proxSensors.countsFrontWithLeftLeds());
+    
   
   int incomingByte = 0; // for incoming serial data
 
@@ -68,13 +83,15 @@ void loop() {
       case 108: //l
         turn90Left();
         if(roomFound){
-          
+          rooms[roomCounter].roomDirection = left;
+          searchRoom();
         }
       break;
       case 114: //r
         turn90Right();
         if(roomFound){
-          
+          rooms[roomCounter].roomDirection = right;
+          searchRoom();
         }
       break;
       case 119: //w
@@ -200,4 +217,25 @@ void turn90Right(){
 
 int32_t getRotationAngle(){
   return (((int32_t)turnAngle >> 16) * 360) >> 16;
+}
+
+void searchRoom(){
+  rooms[roomCounter].roomNumber = roomCounter + 1;
+  //String temp = "Found a room, number: " + rooms[roomCounter].roomNumber + " and it's on the " +  rooms[roomCounter].roomDirection;
+  Serial1.print("Found a room, number: ");
+  Serial1.print(rooms[roomCounter].roomNumber);
+  Serial1.print(" and it's on the ");
+  Serial1.println(rooms[roomCounter].roomDirection);
+
+  int16_t initialPos = encoders.getCountsLeft();
+  int16_t pos = initialPos;
+
+  while((initialPos + 100) > right){
+    motors.setSpeeds(maxSpeed,maxSpeed);
+    pos = encoders.getCountsLeft();
+  }
+
+  
+  
+  roomCounter++;
 }

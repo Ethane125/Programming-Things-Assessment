@@ -50,11 +50,6 @@ void loop() {
   
   //turnSensorUpdate();
   //Serial.println(getRotationAngle());
-
-
-    proxSensors.read();
-    Serial.println(proxSensors.countsFrontWithLeftLeds());
-    
   
   int incomingByte = 0; // for incoming serial data
 
@@ -229,13 +224,21 @@ void searchRoom(){
 
   int16_t initialPos = encoders.getCountsLeft();
   int16_t pos = initialPos;
+  
+  proxSensors.read();
+  Serial.print(proxSensors.countsFrontWithLeftLeds());
+  Serial.println(proxSensors.countsFrontWithRightLeds());
 
   while((initialPos + 100) > right){
     motors.setSpeeds(maxSpeed,maxSpeed);
     pos = encoders.getCountsLeft();
+     proxSensors.read();
+    Serial.print(proxSensors.countsFrontWithLeftLeds());
+    Serial.println(proxSensors.countsFrontWithRightLeds());
   }
-
+  motors.setSpeeds(0,0);
   
   
   roomCounter++;
+  start = false;
 }

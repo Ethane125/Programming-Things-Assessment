@@ -223,22 +223,60 @@ void searchRoom(){
   Serial1.println(rooms[roomCounter].roomDirection);
 
   int16_t initialPos = encoders.getCountsLeft();
-  int16_t pos = initialPos;
+  int16_t right = initialPos;
   
   proxSensors.read();
   Serial.print(proxSensors.countsFrontWithLeftLeds());
   Serial.println(proxSensors.countsFrontWithRightLeds());
 
-  while((initialPos + 100) > right){
+  while((initialPos + 200) > right){
     motors.setSpeeds(maxSpeed,maxSpeed);
-    pos = encoders.getCountsLeft();
+    right = encoders.getCountsLeft();
      proxSensors.read();
     Serial.print(proxSensors.countsFrontWithLeftLeds());
     Serial.println(proxSensors.countsFrontWithRightLeds());
   }
   motors.setSpeeds(0,0);
+  turnLeft(45);
+  turnRight(90);
+  turnLeft(45);
   
-  
+  initialPos = encoders.getCountsLeft();
+  right = initialPos;
+  while((initialPos - 200) < right){
+    motors.setSpeeds(-maxSpeed,-maxSpeed);
+    right = encoders.getCountsLeft();
+     proxSensors.read();
+    Serial.print(proxSensors.countsFrontWithLeftLeds());
+    Serial.println(proxSensors.countsFrontWithRightLeds());
+  }
+  motors.setSpeeds(0,0);
+
+  if(rooms[roomCounter].roomDirection == 0){
+    turnRight(90);
+  }else{
+    turnLeft(90);
+  }
   roomCounter++;
-  start = false;
+  Serial1.println("Room check complete, swapping to auto movement");
+}
+
+void turnRight(int turn){
+  turnSensorReset();
+  while(getRotationAngle() != -turn){
+    motors.setLeftSpeed(120);
+    motors.setRightSpeed(((120) * -1));
+    turnSensorUpdate();
+  }
+  motors.setSpeeds(0,0);
+}
+
+void turnLeft(int turn){
+  turnSensorReset();
+  while(getRotationAngle() != turn){
+    motors.setRightSpeed(100);
+    motors.setLeftSpeed(((100) * -1));
+    turnSensorUpdate();
+  }
+  motors.setSpeeds(0,0);
 }

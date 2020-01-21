@@ -13,6 +13,7 @@ int maxSpeed = 50;
 #define NUM_SENSORS 3
   uint16_t lineSensorValues[NUM_SENSORS];
  uint16_t leftInitial, centreInitial, rightInitial;
+ int proxFrontLeftIn, proxFrontRightIn, proxLeftLeftIn;
  bool start = false;
  bool roomFound = false;
 enum Direction {left, right};
@@ -20,7 +21,7 @@ enum Direction {left, right};
 struct room{
   int roomNumber;
   Direction roomDirection;
-  bool empty;
+  bool objectFound;
 };
 
 struct room rooms[3];
@@ -39,17 +40,20 @@ void setup() {
   rightInitial = lineSensorValues[0] + 700;
   turnSensorSetup();
   turnSensorReset();
+
   while(!Serial){}
   //Serial.println(rightInitial);
 }
 
 void loop() {
+
+
   //if(!start){
    // motors.setSpeeds(0,0);
   //}
   
   //turnSensorUpdate();
-  //Serial.println(getRotationAngle());
+  Serial.println(checkProxSensors());
   
   int incomingByte = 0; // for incoming serial data
 
@@ -224,21 +228,19 @@ void searchRoom(){
 
   int16_t initialPos = encoders.getCountsLeft();
   int16_t right = initialPos;
-  
-  proxSensors.read();
-  Serial.print(proxSensors.countsFrontWithLeftLeds());
-  Serial.println(proxSensors.countsFrontWithRightLeds());
+
+  bool objectFound = false;
 
   while((initialPos + 200) > right){
     motors.setSpeeds(maxSpeed,maxSpeed);
     right = encoders.getCountsLeft();
-     proxSensors.read();
-    Serial.print(proxSensors.countsFrontWithLeftLeds());
-    Serial.println(proxSensors.countsFrontWithRightLeds());
+    objectFound = checkProxSensors()
   }
   motors.setSpeeds(0,0);
   turnLeft(45);
+  objectFound = checkProxSensors()
   turnRight(90);
+  objectFound = checkProxSensors()
   turnLeft(45);
   
   initialPos = encoders.getCountsLeft();
@@ -246,9 +248,6 @@ void searchRoom(){
   while((initialPos - 200) < right){
     motors.setSpeeds(-maxSpeed,-maxSpeed);
     right = encoders.getCountsLeft();
-     proxSensors.read();
-    Serial.print(proxSensors.countsFrontWithLeftLeds());
-    Serial.println(proxSensors.countsFrontWithRightLeds());
   }
   motors.setSpeeds(0,0);
 
@@ -257,8 +256,13 @@ void searchRoom(){
   }else{
     turnLeft(90);
   }
+  rooms[roomCounter].objectFound = objectFound;
+  if(objectFound){
+    Serial1.println("object found in room");
+  }
   roomCounter++;
   Serial1.println("Room check complete, swapping to auto movement");
+  
 }
 
 void turnRight(int turn){
@@ -279,4 +283,19 @@ void turnLeft(int turn){
     turnSensorUpdate();
   }
   motors.setSpeeds(0,0);
+}
+
+bool checkProxSensors(){
+
+  proxSensors.read();
+  if(proxSensors.countsFrontWithLeftLeds() > 4) {return true;}
+  if(proxSensors.countsFrontWithRightLeds() > 4) {return true;}
+
+  if(proxSensors.countsLeftWithLeftLeds() > 4) {return true;}
+  if(proxSensors.countsLeftWithRightLeds() > 4) {return true;}
+
+  if(proxSensors.countsRightWithLeftLeds() > 4) {return true;}
+  if(proxSensors.countsRightWithRightLeds() > 4) {return true;}
+
+  return false;
 }

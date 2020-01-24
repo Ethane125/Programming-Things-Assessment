@@ -153,7 +153,7 @@
 			this.txtReport.Location = new System.Drawing.Point(1456, 39);
 			this.txtReport.Name = "txtReport";
 			this.txtReport.ReadOnly = true;
-			this.txtReport.Size = new System.Drawing.Size(318, 677);
+			this.txtReport.Size = new System.Drawing.Size(352, 677);
 			this.txtReport.TabIndex = 10;
 			this.txtReport.Text = "";
 			// 
@@ -181,7 +181,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1800, 858);
+			this.ClientSize = new System.Drawing.Size(1894, 858);
 			this.Controls.Add(this.btnTestRight);
 			this.Controls.Add(this.btnTestleft);
 			this.Controls.Add(this.txtReport);

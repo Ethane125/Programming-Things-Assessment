@@ -41,7 +41,7 @@ void setup() {
   turnSensorSetup();
   turnSensorReset();
 
-  while(!Serial){}
+  //while(!Serial){}
   //Serial.println(rightInitial);
 }
 
@@ -53,7 +53,6 @@ void loop() {
   //}
   
   //turnSensorUpdate();
-  Serial.println(checkProxSensors());
   
   int incomingByte = 0; // for incoming serial data
 
@@ -192,7 +191,8 @@ void turn90Left(){
     turnSensorUpdate();
   }
   motors.setSpeeds(0,0);
-  Serial1.println("Left turn complete, swapping to auto movement");
+  if(!roomFound){
+    Serial1.println("Left turn complete, swapping to auto movement");}
 }
 
 void turn90Right(){
@@ -211,7 +211,8 @@ void turn90Right(){
     turnSensorUpdate();
   }
   motors.setSpeeds(0,0);
-  Serial1.println("Right turn complete, swapping to auto movement");
+  if(!roomFound){
+    Serial1.println("Right turn complete, swapping to auto movement");}
 }
 
 int32_t getRotationAngle(){
@@ -220,11 +221,12 @@ int32_t getRotationAngle(){
 
 void searchRoom(){
   rooms[roomCounter].roomNumber = roomCounter + 1;
-  //String temp = "Found a room, number: " + rooms[roomCounter].roomNumber + " and it's on the " +  rooms[roomCounter].roomDirection;
-  Serial1.print("Found a room, number: ");
-  Serial1.print(rooms[roomCounter].roomNumber);
-  Serial1.print(" and it's on the ");
-  Serial1.println(rooms[roomCounter].roomDirection);
+  //String temp = "Found a room, room number: " + rooms[roomCounter].roomNumber + " and it's on the " +  rooms[roomCounter].roomDirection;
+  //Serial1.print("Found a room, number: ");
+  //Serial1.print(rooms[roomCounter].roomNumber);
+  //Serial1.print(" and it's on the ");
+  //Serial1.print(rooms[roomCounter].roomDirection);
+  //Serial1.println(".");
 
   int16_t initialPos = encoders.getCountsLeft();
   int16_t right = initialPos;
@@ -234,13 +236,13 @@ void searchRoom(){
   while((initialPos + 200) > right){
     motors.setSpeeds(maxSpeed,maxSpeed);
     right = encoders.getCountsLeft();
-    objectFound = checkProxSensors()
+    objectFound = checkProxSensors();
   }
   motors.setSpeeds(0,0);
   turnLeft(45);
-  objectFound = checkProxSensors()
+  objectFound = checkProxSensors();
   turnRight(90);
-  objectFound = checkProxSensors()
+  objectFound = checkProxSensors();
   turnLeft(45);
   
   initialPos = encoders.getCountsLeft();
@@ -257,12 +259,19 @@ void searchRoom(){
     turnLeft(90);
   }
   rooms[roomCounter].objectFound = objectFound;
-  if(objectFound){
-    Serial1.println("object found in room");
-  }
+  Serial1.print("Found a room, number: ");
+  Serial1.print(rooms[roomCounter].roomNumber);
+  Serial1.print(" and it's on the ");
+  Serial1.print(rooms[roomCounter].roomDirection);
+  Serial1.print(" contains object?: ");
+  Serial1.print(rooms[roomCounter].objectFound? "1" : "0");
+  Serial1.println(".");
+  //if(objectFound){
+  //  Serial1.println("object found in room");
+  //}
   roomCounter++;
   Serial1.println("Room check complete, swapping to auto movement");
-  
+  roomFound = false;
 }
 
 void turnRight(int turn){

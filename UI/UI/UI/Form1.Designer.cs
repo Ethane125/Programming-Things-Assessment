@@ -37,10 +37,9 @@
 			this.txtOutput = new System.Windows.Forms.RichTextBox();
 			this.btnTurnLeft = new System.Windows.Forms.Button();
 			this.btnTurnRight = new System.Windows.Forms.Button();
-			this.btnRoom = new System.Windows.Forms.Button();
 			this.txtReport = new System.Windows.Forms.RichTextBox();
-			this.btnTestleft = new System.Windows.Forms.Button();
-			this.btnTestRight = new System.Windows.Forms.Button();
+			this.btnRoom = new System.Windows.Forms.Button();
+			this.btnTJunc = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnFWD
@@ -138,52 +137,41 @@
 			this.btnTurnRight.UseVisualStyleBackColor = true;
 			this.btnTurnRight.Click += new System.EventHandler(this.btnTurnRight_Click);
 			// 
-			// btnRoom
-			// 
-			this.btnRoom.Location = new System.Drawing.Point(204, 492);
-			this.btnRoom.Name = "btnRoom";
-			this.btnRoom.Size = new System.Drawing.Size(202, 81);
-			this.btnRoom.TabIndex = 9;
-			this.btnRoom.Text = "Room";
-			this.btnRoom.UseVisualStyleBackColor = true;
-			this.btnRoom.Click += new System.EventHandler(this.btnRoom_Click);
-			// 
 			// txtReport
 			// 
 			this.txtReport.Location = new System.Drawing.Point(1456, 39);
 			this.txtReport.Name = "txtReport";
 			this.txtReport.ReadOnly = true;
-			this.txtReport.Size = new System.Drawing.Size(352, 677);
+			this.txtReport.Size = new System.Drawing.Size(504, 677);
 			this.txtReport.TabIndex = 10;
 			this.txtReport.Text = "";
 			// 
-			// btnTestleft
+			// btnRoom
 			// 
-			this.btnTestleft.Location = new System.Drawing.Point(107, 749);
-			this.btnTestleft.Name = "btnTestleft";
-			this.btnTestleft.Size = new System.Drawing.Size(123, 75);
-			this.btnTestleft.TabIndex = 11;
-			this.btnTestleft.Text = "turn left 90°";
-			this.btnTestleft.UseVisualStyleBackColor = true;
-			this.btnTestleft.Click += new System.EventHandler(this.btnTestleft_Click);
+			this.btnRoom.Location = new System.Drawing.Point(107, 488);
+			this.btnRoom.Name = "btnRoom";
+			this.btnRoom.Size = new System.Drawing.Size(148, 81);
+			this.btnRoom.TabIndex = 9;
+			this.btnRoom.Text = "Room";
+			this.btnRoom.UseVisualStyleBackColor = true;
+			this.btnRoom.Click += new System.EventHandler(this.btnRoom_Click);
 			// 
-			// btnTestRight
+			// btnTJunc
 			// 
-			this.btnTestRight.Location = new System.Drawing.Point(358, 749);
-			this.btnTestRight.Name = "btnTestRight";
-			this.btnTestRight.Size = new System.Drawing.Size(123, 75);
-			this.btnTestRight.TabIndex = 12;
-			this.btnTestRight.Text = "turn right 90°";
-			this.btnTestRight.UseVisualStyleBackColor = true;
-			this.btnTestRight.Click += new System.EventHandler(this.btnTestRight_Click);
+			this.btnTJunc.Location = new System.Drawing.Point(333, 488);
+			this.btnTJunc.Name = "btnTJunc";
+			this.btnTJunc.Size = new System.Drawing.Size(148, 81);
+			this.btnTJunc.TabIndex = 11;
+			this.btnTJunc.Text = "T Junction";
+			this.btnTJunc.UseVisualStyleBackColor = true;
+			this.btnTJunc.Click += new System.EventHandler(this.btnTJunc_Click);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1894, 858);
-			this.Controls.Add(this.btnTestRight);
-			this.Controls.Add(this.btnTestleft);
+			this.ClientSize = new System.Drawing.Size(2020, 858);
+			this.Controls.Add(this.btnTJunc);
 			this.Controls.Add(this.txtReport);
 			this.Controls.Add(this.btnRoom);
 			this.Controls.Add(this.btnTurnRight);
@@ -212,10 +200,9 @@
 		private System.Windows.Forms.RichTextBox txtOutput;
 		private System.Windows.Forms.Button btnTurnLeft;
 		private System.Windows.Forms.Button btnTurnRight;
-		private System.Windows.Forms.Button btnRoom;
 		private System.Windows.Forms.RichTextBox txtReport;
-		private System.Windows.Forms.Button btnTestleft;
-		private System.Windows.Forms.Button btnTestRight;
+		private System.Windows.Forms.Button btnRoom;
+		private System.Windows.Forms.Button btnTJunc;
 	}
 }
 

@@ -1,3 +1,10 @@
+#include <ArduinoSTL.h>
+#include <vector>
+#include <string>
+#include <system_configuration.h>
+#include <unwind-cxx.h>
+//#include <utility.h>
+
 #include <Zumo32U4.h>
 #include <Wire.h>
 #include "TurnSensor.h"
@@ -9,6 +16,8 @@ Zumo32U4LineSensors lineSensors;
 Zumo32U4ProximitySensors proxSensors;
 Zumo32U4Encoders encoders;
 L3G gyro;
+Zumo32U4Buzzer buzzer;
+
 int maxSpeed = 50;
 #define NUM_SENSORS 3
   uint16_t lineSensorValues[NUM_SENSORS];
@@ -16,7 +25,10 @@ int maxSpeed = 50;
  int proxFrontLeftIn, proxFrontRightIn, proxLeftLeftIn;
  bool start = false;
  bool roomFound = false;
+ bool reachedJunction = false;
 enum Direction {left, right};
+int startPos;
+std::vector<String> instructions;
 
 struct room{
   int roomNumber;
@@ -24,8 +36,9 @@ struct room{
   bool objectFound;
 };
 
-struct room rooms[3];
- int roomCounter = 0;
+//struct room rooms[3];
+std::vector<room> rooms;
+int roomCounter = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial1.begin(9600);
@@ -65,9 +78,11 @@ void loop() {
     switch(incomingByte){
       //61 =
       //45 -
-      case 116:
+      case 116: //t auto move togle
         start = !start;
-        if(!start){ motors.setSpeeds(0,0); }
+        if(!start){ motors.setSpeeds(0,0); }else{
+          startPos = encoders.getCountsLeft();
+        }
       break;
       case 45:  //-
           maxSpeed = maxSpeed - 25;
@@ -79,16 +94,22 @@ void loop() {
         motors.setSpeeds(0,0);
         break;
       case 108: //l
+        instructions.push_back(String(startPos - encoders.getCountsLeft()));
         turn90Left();
+        instructions.push_back("LEFT");
         if(roomFound){
-          rooms[roomCounter].roomDirection = left;
+          rooms.push_back(room());
+          rooms.at(roomCounter).roomDirection = left;
           searchRoom();
         }
       break;
       case 114: //r
+      instructions.push_back(String(startPos - encoders.getCountsLeft()));
         turn90Right();
+        instructions.push_back("RIGHT");
         if(roomFound){
-          rooms[roomCounter].roomDirection = right;
+          rooms.push_back(room());
+          rooms.at(roomCounter).roomDirection = right;
           searchRoom();
         }
       break;
@@ -115,6 +136,11 @@ void loop() {
           start = false;
           motors.setSpeeds(0,0);
           roomFound = true;
+        break;
+        case 106:
+          start = false;
+          motors.setSpeeds(0,0);
+          reachedJunction = true;
         break;
     }
 
@@ -220,7 +246,7 @@ int32_t getRotationAngle(){
 }
 
 void searchRoom(){
-  rooms[roomCounter].roomNumber = roomCounter + 1;
+  rooms.at(roomCounter).roomNumber = roomCounter + 1;
   //String temp = "Found a room, room number: " + rooms[roomCounter].roomNumber + " and it's on the " +  rooms[roomCounter].roomDirection;
   //Serial1.print("Found a room, number: ");
   //Serial1.print(rooms[roomCounter].roomNumber);
@@ -253,18 +279,21 @@ void searchRoom(){
   }
   motors.setSpeeds(0,0);
 
-  if(rooms[roomCounter].roomDirection == 0){
+  if(rooms.at(roomCounter).roomDirection == 0){
     turnRight(90);
   }else{
     turnLeft(90);
   }
-  rooms[roomCounter].objectFound = objectFound;
+  rooms.at(roomCounter).objectFound = objectFound;
+  if(rooms.at(roomCounter).objectFound){
+    buzzer.playFrequency(440, 200, 15);
+  }
   Serial1.print("Found a room, number: ");
-  Serial1.print(rooms[roomCounter].roomNumber);
+  Serial1.print(rooms.at(roomCounter).roomNumber);
   Serial1.print(" and it's on the ");
-  Serial1.print(rooms[roomCounter].roomDirection);
+  Serial1.print(rooms.at(roomCounter).roomDirection);
   Serial1.print(" contains object?: ");
-  Serial1.print(rooms[roomCounter].objectFound? "1" : "0");
+  Serial1.print(rooms.at(roomCounter).objectFound? "1" : "0");
   Serial1.println(".");
   //if(objectFound){
   //  Serial1.println("object found in room");
@@ -297,14 +326,14 @@ void turnLeft(int turn){
 bool checkProxSensors(){
 
   proxSensors.read();
-  if(proxSensors.countsFrontWithLeftLeds() > 4) {return true;}
-  if(proxSensors.countsFrontWithRightLeds() > 4) {return true;}
+  if(proxSensors.countsFrontWithLeftLeds() > 3) {return true;}
+  if(proxSensors.countsFrontWithRightLeds() > 3) {return true;}
 
-  if(proxSensors.countsLeftWithLeftLeds() > 4) {return true;}
-  if(proxSensors.countsLeftWithRightLeds() > 4) {return true;}
+  if(proxSensors.countsLeftWithLeftLeds() > 3) {return true;}
+  if(proxSensors.countsLeftWithRightLeds() > 3) {return true;}
 
-  if(proxSensors.countsRightWithLeftLeds() > 4) {return true;}
-  if(proxSensors.countsRightWithRightLeds() > 4) {return true;}
+  if(proxSensors.countsRightWithLeftLeds() > 3) {return true;}
+  if(proxSensors.countsRightWithRightLeds() > 3) {return true;}
 
   return false;
 }

@@ -94,7 +94,7 @@ namespace IOT
 				btnTurnLeft.Enabled = false;
 				btnTurnRight.Enabled = false;
 				serialPort.Write("t");
-				//txtOutput.Clear();
+				txtOutput.Clear();
 			}
 			if(txtOutput.Text.Contains("Found a room") && txtOutput.Text.Contains("."))
 			{
@@ -141,6 +141,13 @@ namespace IOT
 		private void btnTestRight_Click(object sender, EventArgs e)
 		{
 			serialPort.Write("r");
+		}
+
+		private void btnTJunc_Click(object sender, EventArgs e)
+		{
+			serialPort.Write("j");
+			btnTurnLeft.Enabled = true;
+			btnTurnRight.Enabled = true;
 		}
 	}
 }

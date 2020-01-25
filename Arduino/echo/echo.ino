@@ -28,17 +28,72 @@ int maxSpeed = 50;
  bool reachedJunction = false;
 enum Direction {left, right};
 int startPos;
-std::vector<String> instructions;
+//std::vector<String> instructions;
 
-struct room{
-  int roomNumber;
-  Direction roomDirection;
-  bool objectFound;
-};
+//struct room{
+//  int roomNumber;
+//  Direction roomDirection;
+//  bool objectFound;
+//};
 
 //struct room rooms[3];
-std::vector<room> rooms;
+//std::vector<room> rooms;
 int roomCounter = 0;
+
+
+
+
+
+class Instruction {
+protected:
+  std::string type;
+public:
+  Instruction() {};
+  std::string getType() { return type; }
+};
+
+class Turn : public Instruction {
+protected:
+  std::string direction;
+public:
+  Turn(std::string direction) : direction(direction) { type = "turn"; }
+  std::string getDirection() { return direction; }
+};
+
+class Straight : public Instruction {
+protected:
+  int distance;
+public:
+  Straight(int distance) : distance(distance) { type = "straight"; }
+  int getDistance() { return distance; }
+};
+
+class Room : public Instruction {
+protected:
+  int roomID;
+  bool objectFound;
+  std::string direction;
+public:
+  Room(int roomID, std::string direction) : roomID(roomID), direction(direction) { type = "room"; }
+  std::string getDirection() { return direction; }
+  bool getFound() { return objectFound; }
+  int getRoomID() { return roomID; }
+  void setObjectFound(bool found) { objectFound = found; }
+};
+
+class TJunction : public Instruction {
+protected:
+  std::string direction;
+public:
+  TJunction(int distance) : direction(direction) { type = "TJunction"; }
+  std::string getDirection() { return direction; }
+};
+
+
+
+
+
+
 void setup() {
   // put your setup code here, to run once:
   Serial1.begin(9600);
@@ -94,23 +149,25 @@ void loop() {
         motors.setSpeeds(0,0);
         break;
       case 108: //l
-        instructions.push_back(String(startPos - encoders.getCountsLeft()));
+        //instructions.push_back(String(startPos - encoders.getCountsLeft()));
         turn90Left();
-        instructions.push_back("LEFT");
+        //instructions.push_back("LEFT");
         if(roomFound){
-          rooms.push_back(room());
-          rooms.at(roomCounter).roomDirection = left;
-          searchRoom();
+          //rooms.push_back(room());
+          //rooms.at(roomCounter).roomDirection = left;
+          Room *room = new Room((roomCounter + 1), "left");
+          searchRoom(room);
         }
       break;
       case 114: //r
-      instructions.push_back(String(startPos - encoders.getCountsLeft()));
+      //instructions.push_back(String(startPos - encoders.getCountsLeft()));
         turn90Right();
-        instructions.push_back("RIGHT");
+        //instructions.push_back("RIGHT");
         if(roomFound){
-          rooms.push_back(room());
-          rooms.at(roomCounter).roomDirection = right;
-          searchRoom();
+         // rooms.push_back(room());
+         // rooms.at(roomCounter).roomDirection = right;
+         Room *room = new Room((roomCounter + 1), "right");
+          searchRoom(room);
         }
       break;
       case 119: //w
@@ -245,8 +302,8 @@ int32_t getRotationAngle(){
   return (((int32_t)turnAngle >> 16) * 360) >> 16;
 }
 
-void searchRoom(){
-  rooms.at(roomCounter).roomNumber = roomCounter + 1;
+void searchRoom(Room *room){
+  //rooms.at(roomCounter).roomNumber = roomCounter + 1;
   //String temp = "Found a room, room number: " + rooms[roomCounter].roomNumber + " and it's on the " +  rooms[roomCounter].roomDirection;
   //Serial1.print("Found a room, number: ");
   //Serial1.print(rooms[roomCounter].roomNumber);
@@ -279,21 +336,21 @@ void searchRoom(){
   }
   motors.setSpeeds(0,0);
 
-  if(rooms.at(roomCounter).roomDirection == 0){
+  if(room->getDirection().c_str() == "right"){
     turnRight(90);
   }else{
     turnLeft(90);
   }
-  rooms.at(roomCounter).objectFound = objectFound;
-  if(rooms.at(roomCounter).objectFound){
+  room->setObjectFound(objectFound);
+  if(objectFound){
     buzzer.playFrequency(440, 200, 15);
   }
   Serial1.print("Found a room, number: ");
-  Serial1.print(rooms.at(roomCounter).roomNumber);
+  Serial1.print(String(room->getRoomID()));
   Serial1.print(" and it's on the ");
-  Serial1.print(rooms.at(roomCounter).roomDirection);
+  Serial1.print((room->getDirection().c_str() == "right"? "1" : "0"));
   Serial1.print(" contains object?: ");
-  Serial1.print(rooms.at(roomCounter).objectFound? "1" : "0");
+  Serial1.print(room->getFound()? "1" : "0");
   Serial1.println(".");
   //if(objectFound){
   //  Serial1.println("object found in room");

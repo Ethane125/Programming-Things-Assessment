@@ -38,9 +38,9 @@ int startPos;
 
 //struct room rooms[3];
 //std::vector<room> rooms;
+
+
 int roomCounter = 0;
-
-
 
 
 
@@ -48,7 +48,7 @@ class Instruction {
 protected:
   std::string type;
 public:
-  Instruction() {};
+  Instruction() {}
   std::string getType() { return type; }
 };
 
@@ -85,11 +85,15 @@ class TJunction : public Instruction {
 protected:
   std::string direction;
 public:
-  TJunction(int distance) : direction(direction) { type = "TJunction"; }
+  TJunction(std::string direction) : direction(direction) { type = "TJunction"; }
   std::string getDirection() { return direction; }
 };
+class EndofTJunc : public Instruction {
+public:
+  EndofTJunc() { type = "endTJunc"; }
+};
 
-
+std::vector<Instruction*> instructions;
 
 
 
@@ -149,26 +153,39 @@ void loop() {
         motors.setSpeeds(0,0);
         break;
       case 108: //l
-        //instructions.push_back(String(startPos - encoders.getCountsLeft()));
-        turn90Left();
-        //instructions.push_back("LEFT");
-        if(roomFound){
-          //rooms.push_back(room());
-          //rooms.at(roomCounter).roomDirection = left;
-          Room *room = new Room((roomCounter + 1), "left");
-          searchRoom(room);
+        instructions.push_back(new Straight(encoders.getCountsLeft() - startPos));
+        if(reachedJunction){
+          instructions.push_back(new TJunction("left"));
+          turn90Left();
+          reachedJunction = false;
+        }else{
+            if(roomFound){
+            turnLeft(90);
+            Room *room = new Room((roomCounter + 1), "left");
+            searchRoom(room);
+          }else{
+            turn90Left();
+            instructions.push_back(new Turn("left"));
+          }
         }
       break;
       case 114: //r
-      //instructions.push_back(String(startPos - encoders.getCountsLeft()));
-        turn90Right();
-        //instructions.push_back("RIGHT");
-        if(roomFound){
-         // rooms.push_back(room());
-         // rooms.at(roomCounter).roomDirection = right;
-         Room *room = new Room((roomCounter + 1), "right");
-          searchRoom(room);
+        instructions.push_back(new Straight(encoders.getCountsLeft() - startPos));
+         if(reachedJunction){
+          instructions.push_back(new TJunction("right"));
+          turn90Right();
+          reachedJunction = false;
+        }else{
+            if(roomFound){
+            turnRight(90);
+            Room *room = new Room((roomCounter + 1), "right");
+            searchRoom(room);
+          }else{
+            turn90Right();
+            instructions.push_back(new Turn("right"));
+          }
         }
+        
       break;
       case 119: //w
           motors.setSpeeds(maxSpeed,maxSpeed);
@@ -198,6 +215,11 @@ void loop() {
           start = false;
           motors.setSpeeds(0,0);
           reachedJunction = true;
+        break;
+        case 121: //y end of tjunc
+          instructions.push_back(new Straight(encoders.getCountsLeft() - startPos));
+          instructions.push_back(new EndofTJunc());
+          endOfTJunction();
         break;
     }
 
@@ -249,13 +271,13 @@ void move(){
   }
 
 void adjustRight(){
-  motors.setRightSpeed(-100);
-  motors.setLeftSpeed(100);
+  motors.setRightSpeed(-70);
+  motors.setLeftSpeed(70);
 }
 
 void adjustLeft(){
-  motors.setRightSpeed(100);
-  motors.setLeftSpeed(-100);
+  motors.setRightSpeed(70);
+  motors.setLeftSpeed(-70);
   }
 
 void turn90Left(){
@@ -355,9 +377,35 @@ void searchRoom(Room *room){
   //if(objectFound){
   //  Serial1.println("object found in room");
   //}
+  instructions.push_back(room);
   roomCounter++;
   Serial1.println("Room check complete, swapping to auto movement");
   roomFound = false;
+}
+
+void endOfTJunction(){
+  //Serial.println(instructions.size());
+  for(int i = 0; i < instructions.size(); i++){
+    Serial.println(instructions.at(i)->getType().c_str());
+  }
+  Serial.println("-----");
+  turnLeft(90);
+  turnLeft(90);
+  int index = instructions.size() - 2;
+  String temp = instructions.at(index)->getType().c_str();
+  while(temp != "TJunction"){
+     Serial.println(instructions.at(index)->getType().c_str());
+    if(instructions.at(index)->getType().c_str() == "room"){
+      index = index - 1;
+    }else{
+      Straight *s = static_cast<Straight*>(instructions.at(index));
+      Serial.println(s->getDistance());
+      movefwd(s->getDistance());
+    }
+    index = index - 1;
+    temp = instructions.at(index)->getType().c_str();
+  }
+  Serial1.println("Reached T junction");
 }
 
 void turnRight(int turn){
@@ -393,4 +441,14 @@ bool checkProxSensors(){
   if(proxSensors.countsRightWithRightLeds() > 3) {return true;}
 
   return false;
+}
+
+void movefwd(int distance){
+  int16_t initialPos = encoders.getCountsLeft();
+  int16_t left = initialPos;
+  while((initialPos + distance) > left){
+    motors.setSpeeds(maxSpeed,maxSpeed);
+    left = encoders.getCountsLeft();
+  }
+  motors.setSpeeds(0,0);
 }

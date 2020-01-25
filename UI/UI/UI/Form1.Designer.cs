@@ -41,6 +41,7 @@
 			this.btnRoom = new System.Windows.Forms.Button();
 			this.btnTJunc = new System.Windows.Forms.Button();
 			this.btnEndJunc = new System.Windows.Forms.Button();
+			this.btnEnd = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnFWD
@@ -177,11 +178,22 @@
 			this.btnEndJunc.UseVisualStyleBackColor = true;
 			this.btnEndJunc.Click += new System.EventHandler(this.btnEndJunc_Click);
 			// 
+			// btnEnd
+			// 
+			this.btnEnd.Location = new System.Drawing.Point(82, 632);
+			this.btnEnd.Name = "btnEnd";
+			this.btnEnd.Size = new System.Drawing.Size(312, 75);
+			this.btnEnd.TabIndex = 13;
+			this.btnEnd.Text = "REACHED END";
+			this.btnEnd.UseVisualStyleBackColor = true;
+			this.btnEnd.Click += new System.EventHandler(this.btnEnd_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(2020, 858);
+			this.Controls.Add(this.btnEnd);
 			this.Controls.Add(this.btnEndJunc);
 			this.Controls.Add(this.btnTJunc);
 			this.Controls.Add(this.txtReport);
@@ -216,6 +228,7 @@
 		private System.Windows.Forms.Button btnRoom;
 		private System.Windows.Forms.Button btnTJunc;
 		private System.Windows.Forms.Button btnEndJunc;
+		private System.Windows.Forms.Button btnEnd;
 	}
 }
 

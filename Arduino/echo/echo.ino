@@ -18,7 +18,7 @@ Zumo32U4Encoders encoders;
 L3G gyro;
 Zumo32U4Buzzer buzzer;
 
-int maxSpeed = 50;
+int maxSpeed = 70;
 #define NUM_SENSORS 3
   uint16_t lineSensorValues[NUM_SENSORS];
  uint16_t leftInitial, centreInitial, rightInitial;
@@ -221,6 +221,11 @@ void loop() {
           instructions.push_back(new EndofTJunc());
           endOfTJunction();
         break;
+        case 112: //e end of map
+          instructions.push_back(new Straight(encoders.getCountsLeft() - startPos));
+          instructions.push_back(new EndofTJunc());
+          endOfTJunction();
+        break;
     }
 
   }
@@ -357,8 +362,8 @@ void searchRoom(Room *room){
     right = encoders.getCountsLeft();
   }
   motors.setSpeeds(0,0);
-
-  if(room->getDirection().c_str() == "right"){
+ String temp = room->getDirection().c_str();
+  if( temp == "left"){
     turnRight(90);
   }else{
     turnLeft(90);
@@ -447,6 +452,12 @@ void movefwd(int distance){
   int16_t initialPos = encoders.getCountsLeft();
   int16_t left = initialPos;
   while((initialPos + distance) > left){
+    lineSensors.read(lineSensorValues,true);
+    if(lineSensorValues[1] > centreInitial){break;}
+    else{
+      if(lineSensorValues[0] > leftInitial){ adjustRight(); delay(100); }
+      if(lineSensorValues[2] > rightInitial){ adjustLeft(); delay(100); }
+      }
     motors.setSpeeds(maxSpeed,maxSpeed);
     left = encoders.getCountsLeft();
   }

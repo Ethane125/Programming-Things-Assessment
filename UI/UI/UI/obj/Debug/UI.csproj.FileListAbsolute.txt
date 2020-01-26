@@ -1,10 +1,9 @@
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\bin\Debug\UI.exe.config
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\bin\Debug\UI.exe
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\bin\Debug\UI.pdb
-C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\UI.csprojAssemblyReference.cache
+C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\IOT.Form1.resources
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\IOT.Properties.Resources.resources
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\UI.csproj.GenerateResource.cache
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\UI.csproj.CoreCompileInputs.cache
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\UI.exe
 C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\UI.pdb
-C:\Users\ethan\Documents\iot project\Programming-Things-Assessment\UI\UI\UI\obj\Debug\IOT.Form1.resources

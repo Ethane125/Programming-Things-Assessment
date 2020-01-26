@@ -1,4 +1,4 @@
-# Programming Tings Assessment
+# Programming Things Assessment
 
 This readme will outline how I approched and solved each task and any issues I faced during the development of this task.
 

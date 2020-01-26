@@ -46,10 +46,9 @@
 			// 
 			// btnFWD
 			// 
-			this.btnFWD.Enabled = false;
-			this.btnFWD.Location = new System.Drawing.Point(188, 12);
+			this.btnFWD.Location = new System.Drawing.Point(198, 12);
 			this.btnFWD.Name = "btnFWD";
-			this.btnFWD.Size = new System.Drawing.Size(100, 75);
+			this.btnFWD.Size = new System.Drawing.Size(110, 75);
 			this.btnFWD.TabIndex = 0;
 			this.btnFWD.Text = "Forward";
 			this.btnFWD.UseVisualStyleBackColor = true;
@@ -57,10 +56,9 @@
 			// 
 			// btnLFT
 			// 
-			this.btnLFT.Enabled = false;
 			this.btnLFT.Location = new System.Drawing.Point(82, 93);
 			this.btnLFT.Name = "btnLFT";
-			this.btnLFT.Size = new System.Drawing.Size(100, 75);
+			this.btnLFT.Size = new System.Drawing.Size(110, 75);
 			this.btnLFT.TabIndex = 1;
 			this.btnLFT.Text = "Left";
 			this.btnLFT.UseVisualStyleBackColor = true;
@@ -68,10 +66,9 @@
 			// 
 			// btnRHT
 			// 
-			this.btnRHT.Enabled = false;
-			this.btnRHT.Location = new System.Drawing.Point(294, 93);
+			this.btnRHT.Location = new System.Drawing.Point(314, 93);
 			this.btnRHT.Name = "btnRHT";
-			this.btnRHT.Size = new System.Drawing.Size(100, 75);
+			this.btnRHT.Size = new System.Drawing.Size(110, 75);
 			this.btnRHT.TabIndex = 2;
 			this.btnRHT.Text = "Right";
 			this.btnRHT.UseVisualStyleBackColor = true;
@@ -79,10 +76,9 @@
 			// 
 			// btnRVS
 			// 
-			this.btnRVS.Enabled = false;
-			this.btnRVS.Location = new System.Drawing.Point(188, 174);
+			this.btnRVS.Location = new System.Drawing.Point(198, 174);
 			this.btnRVS.Name = "btnRVS";
-			this.btnRVS.Size = new System.Drawing.Size(100, 75);
+			this.btnRVS.Size = new System.Drawing.Size(110, 75);
 			this.btnRVS.TabIndex = 3;
 			this.btnRVS.Text = "Reverse";
 			this.btnRVS.UseVisualStyleBackColor = true;
@@ -90,10 +86,9 @@
 			// 
 			// btnStop
 			// 
-			this.btnStop.Enabled = false;
-			this.btnStop.Location = new System.Drawing.Point(188, 93);
+			this.btnStop.Location = new System.Drawing.Point(198, 93);
 			this.btnStop.Name = "btnStop";
-			this.btnStop.Size = new System.Drawing.Size(100, 75);
+			this.btnStop.Size = new System.Drawing.Size(110, 75);
 			this.btnStop.TabIndex = 4;
 			this.btnStop.Text = "Stop";
 			this.btnStop.UseVisualStyleBackColor = true;
@@ -103,7 +98,7 @@
 			// 
 			this.btnAutoMove.Location = new System.Drawing.Point(82, 265);
 			this.btnAutoMove.Name = "btnAutoMove";
-			this.btnAutoMove.Size = new System.Drawing.Size(312, 75);
+			this.btnAutoMove.Size = new System.Drawing.Size(342, 75);
 			this.btnAutoMove.TabIndex = 5;
 			this.btnAutoMove.Text = "Auto move toggle";
 			this.btnAutoMove.UseVisualStyleBackColor = true;
@@ -123,7 +118,7 @@
 			// 
 			this.btnTurnLeft.Location = new System.Drawing.Point(82, 346);
 			this.btnTurnLeft.Name = "btnTurnLeft";
-			this.btnTurnLeft.Size = new System.Drawing.Size(100, 75);
+			this.btnTurnLeft.Size = new System.Drawing.Size(110, 75);
 			this.btnTurnLeft.TabIndex = 7;
 			this.btnTurnLeft.Text = "turn left 90°";
 			this.btnTurnLeft.UseVisualStyleBackColor = true;
@@ -131,9 +126,9 @@
 			// 
 			// btnTurnRight
 			// 
-			this.btnTurnRight.Location = new System.Drawing.Point(294, 346);
+			this.btnTurnRight.Location = new System.Drawing.Point(314, 346);
 			this.btnTurnRight.Name = "btnTurnRight";
-			this.btnTurnRight.Size = new System.Drawing.Size(100, 75);
+			this.btnTurnRight.Size = new System.Drawing.Size(110, 75);
 			this.btnTurnRight.TabIndex = 8;
 			this.btnTurnRight.Text = "turn right 90°";
 			this.btnTurnRight.UseVisualStyleBackColor = true;
@@ -160,7 +155,7 @@
 			// 
 			// btnTJunc
 			// 
-			this.btnTJunc.Location = new System.Drawing.Point(244, 453);
+			this.btnTJunc.Location = new System.Drawing.Point(274, 453);
 			this.btnTJunc.Name = "btnTJunc";
 			this.btnTJunc.Size = new System.Drawing.Size(150, 75);
 			this.btnTJunc.TabIndex = 11;
@@ -170,7 +165,7 @@
 			// 
 			// btnEndJunc
 			// 
-			this.btnEndJunc.Location = new System.Drawing.Point(244, 534);
+			this.btnEndJunc.Location = new System.Drawing.Point(274, 534);
 			this.btnEndJunc.Name = "btnEndJunc";
 			this.btnEndJunc.Size = new System.Drawing.Size(150, 75);
 			this.btnEndJunc.TabIndex = 12;
@@ -182,7 +177,7 @@
 			// 
 			this.btnEnd.Location = new System.Drawing.Point(82, 632);
 			this.btnEnd.Name = "btnEnd";
-			this.btnEnd.Size = new System.Drawing.Size(312, 75);
+			this.btnEnd.Size = new System.Drawing.Size(342, 75);
 			this.btnEnd.TabIndex = 13;
 			this.btnEnd.Text = "REACHED END";
 			this.btnEnd.UseVisualStyleBackColor = true;
@@ -192,6 +187,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoSize = true;
 			this.ClientSize = new System.Drawing.Size(2020, 858);
 			this.Controls.Add(this.btnEnd);
 			this.Controls.Add(this.btnEndJunc);

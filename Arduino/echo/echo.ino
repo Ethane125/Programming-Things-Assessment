@@ -157,7 +157,7 @@ void loop() {
       case 61:  //=
           maxSpeed = maxSpeed + 25;
         break;
-      case 32:  //w
+      case 32:  // space character
         motors.setSpeeds(0,0);
         break;
       case 108: //l
@@ -253,9 +253,6 @@ void loop() {
     
     }
   
-  
-  
-  
 }
 
 void move(){
@@ -294,14 +291,6 @@ void adjustLeft(){
   }
 
 void turn90Left(){
-  /*int16_t initialLeft = encoders.getCountsLeft();
-  int16_t left = initialLeft;
-
-  while((initialLeft + -590) < left){
-    motors.setRightSpeed(maxSpeed*2);
-    motors.setLeftSpeed(((maxSpeed*2) * -1));
-    left = encoders.getCountsLeft();
-  }*/
   turnSensorReset();
   while(getRotationAngle() != 90){
     motors.setRightSpeed(120);
@@ -314,14 +303,6 @@ void turn90Left(){
 }
 
 void turn90Right(){
-  /*int16_t initialRight = encoders.getCountsLeft();
-  int16_t right = initialRight;
-
-  while((initialRight + 545) > right){
-    motors.setLeftSpeed(maxSpeed*2);
-    motors.setRightSpeed(((maxSpeed*2) * -1));
-    right = encoders.getCountsLeft();
-  }*/
   turnSensorReset();
   while(getRotationAngle() != -90){
     motors.setLeftSpeed(150);
@@ -338,13 +319,6 @@ int32_t getRotationAngle(){
 }
 
 void searchRoom(Room *room){
-  //rooms.at(roomCounter).roomNumber = roomCounter + 1;
-  //String temp = "Found a room, room number: " + rooms[roomCounter].roomNumber + " and it's on the " +  rooms[roomCounter].roomDirection;
-  //Serial1.print("Found a room, number: ");
-  //Serial1.print(rooms[roomCounter].roomNumber);
-  //Serial1.print(" and it's on the ");
-  //Serial1.print(rooms[roomCounter].roomDirection);
-  //Serial1.println(".");
 
   int16_t initialPos = encoders.getCountsLeft();
   int16_t right = initialPos;
@@ -516,6 +490,10 @@ for(int i = 0; i < instructions.size(); i++){
     index = index - 1;
     temp = instructions.at(index)->getType().c_str();
   }
+   ledRed(0);
+   ledYellow(0);
+   ledGreen(0);
+   buzzer.stopPlaying();
 }
 
 void scanRoomAgainTJunc(String directionRoom){
@@ -524,8 +502,39 @@ void scanRoomAgainTJunc(String directionRoom){
         }else{
           turnRight(90);
         }
-        //move fwd scan move back
-        delay(200);
+
+          int16_t initialPos = encoders.getCountsLeft();
+          int16_t right = initialPos;
+        
+          bool objectFound = false;
+        
+          while((initialPos + 200) > right){
+            motors.setSpeeds(maxSpeed,maxSpeed);
+            right = encoders.getCountsLeft();
+            objectFound = checkProxSensors();
+          }
+          motors.setSpeeds(0,0);
+          turnLeft(45);
+          objectFound = checkProxSensors();
+          turnRight(90);
+          objectFound = checkProxSensors();
+          turnLeft(45);
+          
+          initialPos = encoders.getCountsLeft();
+          right = initialPos;
+          while((initialPos - 200) < right){
+            motors.setSpeeds(-maxSpeed,-maxSpeed);
+            right = encoders.getCountsLeft();
+          }
+          motors.setSpeeds(0,0);
+
+          if(objectFound){
+              ledRed(1);
+              ledYellow(1);
+              ledGreen(1);
+              buzzer.playFrequency(440, 300000, 10); //5 minutes
+          }
+      
          if(directionRoom == "left"){
           turnLeft(90);
         }else{
@@ -539,8 +548,41 @@ void scanRoomAgain(String directionRoom){
         }else{
           turnLeft(90);
         }
-        //move fwd scan move back
-        delay(200);
+        
+
+        int16_t initialPos = encoders.getCountsLeft();
+          int16_t right = initialPos;
+        
+          bool objectFound = false;
+        
+          while((initialPos + 200) > right){
+            motors.setSpeeds(maxSpeed,maxSpeed);
+            right = encoders.getCountsLeft();
+            objectFound = checkProxSensors();
+          }
+          motors.setSpeeds(0,0);
+          turnLeft(45);
+          objectFound = checkProxSensors();
+          turnRight(90);
+          objectFound = checkProxSensors();
+          turnLeft(45);
+          
+          initialPos = encoders.getCountsLeft();
+          right = initialPos;
+          while((initialPos - 200) < right){
+            motors.setSpeeds(-maxSpeed,-maxSpeed);
+            right = encoders.getCountsLeft();
+          }
+          motors.setSpeeds(0,0);
+
+          if(objectFound){
+              ledRed(1);
+              ledYellow(1);
+              ledGreen(1);
+              buzzer.playFrequency(440, 300000, 10); //5 minutes
+          }
+
+
          if(directionRoom == "left"){
           turnLeft(90);
         }else{

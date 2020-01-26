@@ -78,7 +78,7 @@ namespace IOT
 			serialPort.Write("t");
 			btnTurnLeft.Enabled = false;
 			btnTurnRight.Enabled = false;
-
+			btnRoom.Enabled = true;
 
 		}
 
@@ -153,6 +153,9 @@ namespace IOT
 		private void btnEndJunc_Click(object sender, EventArgs e)
 		{
 			serialPort.Write("y");
+			btnRoom.Enabled = false;
+			btnTurnLeft.Enabled = false;
+			btnTurnRight.Enabled = false;
 		}
 
 		private void btnEnd_Click(object sender, EventArgs e)

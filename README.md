@@ -32,6 +32,8 @@ However, this data also needs to be stored so I created a struct called room tha
 
 At this point I decided that storing the room structs in a fixed size array was not a good method as even though there probably would never be more than 10 rooms it was a messy solution. So I added the `ArduinoSTL` library and that allows me to use the standard templates from c++, this allowed me to use a vector of structs so I could use `.push_back()` to add a new room to the collection.
 
+When it comes to using the proximity sensors I have noticed an issue, the sensitivity of the sensor is dependent on the batteries, They are more sensitive when they are fresh, This has caused me some issues but I didn't figure it out until now so I have been unable to work around it, e.g. when they are new it could pick up objects in other rooms. I think the light levels of the room also effect the sensitivity.
+
 ## Task 6 - The T-junction
 For this task I added 2 new buttons to the UI, one for signalling that the zumo had reached a T-junction and another to signal that it had reached the end of a t junction.
 

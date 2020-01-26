@@ -89,7 +89,7 @@ class StartInsrct : public Instruction {
 public:
   StartInsrct() { type = "start"; }
 };
-
+//a vector of instruction pointers
 std::vector<Instruction*> instructions;
 
 
@@ -217,7 +217,7 @@ void loop() {
 
   }
   if(start){
-
+  //if auto move is active every 150ms it will call the move fucntion
   static uint16_t lastSampleTime = 0;
   if ((uint16_t)(millis() - lastSampleTime) >= 150)
   {
@@ -233,7 +233,11 @@ void loop() {
     }
   
 }
-
+/*
+ The move function checks the line sensors with the centre sensor taking priority
+ because this means that the zumo has hit a turn
+ then the left and right sensors trigger adjustments
+*/
 void move(){
   lineSensors.read(lineSensorValues,true);
   //Serial.println(lineSensorValues[0]);
@@ -268,7 +272,7 @@ void adjustLeft(){
   motors.setRightSpeed(70);
   motors.setLeftSpeed(-70);
   }
-
+//turn90left/right use the gyro to move whilst the angle is not 90
 void turn90Left(){
   turnSensorReset();
   while(getRotationAngle() != 90){
@@ -296,7 +300,11 @@ void turn90Right(){
 int32_t getRotationAngle(){
   return (((int32_t)turnAngle >> 16) * 360) >> 16;
 }
-
+/*
+when search room is called it moves into the room and does a spin
+all whilst checking the prox sesnors, if true then it beeps and
+sets the object found in the room object and pushes it back to the vector
+*/
 void searchRoom(Room *room){
 
   int16_t initialPos = encoders.getCountsLeft();
@@ -348,7 +356,11 @@ void searchRoom(Room *room){
   Serial1.println("Room check complete, swapping to auto movement");
   roomFound = false;
 }
-
+/*
+does a 180 then loops back through the list of instructions until
+the start of the T junction and executes any straights
+It does this by casting it to the correct object then getting the distance
+*/
 void endOfTJunction(){
   //Serial.println(instructions.size());
   for(int i = 0; i < instructions.size(); i++){
@@ -375,7 +387,13 @@ void endOfTJunction(){
   Serial1.println("Reached T junction");
   instructions.push_back(new StartofTJunc());
 }
-
+/*
+This functions the same as endOfTJunction() however it has alot more conditions
+the main one being a T junction, it has to check wether there is a room and if it has an object in
+if true then loop to the start of the T junction and execute the same instructions, this will get you
+to the enterence of the room you can then scan the room and work backwards again to get back to the
+start of the T junction
+*/
 void goHome(){
   turnLeft(90);
   turnLeft(90);
@@ -427,7 +445,7 @@ void goHome(){
       //Serial1.println(instructions.at(juncIndex)->getType().c_str());
       TJunction *j = static_cast<TJunction*>(instructions.at(juncIndex));
       String juncDirec = j->getDirection().c_str();
-      if(researchedRoom){
+      if(researchedRoom){ //depending on if you have come from a room or not turns you back into the main coridoor
         if(juncDirec == "left"){
           turnRight(90);
         }else{
@@ -474,7 +492,12 @@ void goHome(){
    ledGreen(0);
    buzzer.stopPlaying();
 }
-
+/*
+These two room commands are the same exept when you search a room on a T junction
+you want to turn back the way you came but on a regular room you want to continue on
+the code is the same as scanRoom but this time if an object is found it plays a tone
+and turns the LEDs on
+*/
 void scanRoomAgainTJunc(String directionRoom){
   if(directionRoom == "left"){
           turnLeft(90);
@@ -603,7 +626,11 @@ bool checkProxSensors(){
 
   return false;
 }
-
+/*
+this method moves forward a set distance based on the encoder value passed in
+it has a dely on the turn sensor so that it has 100ms to turn in
+before the straight movemnt in the while loop takes over
+*/
 void movefwd(int distance){
   int16_t initialPos = encoders.getCountsLeft();
   int16_t left = initialPos;

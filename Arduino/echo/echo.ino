@@ -3,7 +3,6 @@
 #include <string>
 #include <system_configuration.h>
 #include <unwind-cxx.h>
-//#include <utility.h>
 
 #include <Zumo32U4.h>
 #include <Wire.h>
@@ -22,28 +21,18 @@ int maxSpeed = 70;
 #define NUM_SENSORS 3
   uint16_t lineSensorValues[NUM_SENSORS];
  uint16_t leftInitial, centreInitial, rightInitial;
- int proxFrontLeftIn, proxFrontRightIn, proxLeftLeftIn;
- bool start = false;
- bool roomFound = false;
+ int proxFrontLeftIn, proxFrontRightIn, proxLeftLeftIn; //this sets up the 3 line sensors and the 3 prox sensors
+ bool start = false;  //this boolean is used to determin whether or not automove is active
+ bool roomFound = false; 
  bool reachedJunction = false;
-enum Direction {left, right};
+enum Direction {left, right}; 
 int startPos;
-//std::vector<String> instructions;
-
-//struct room{
-//  int roomNumber;
-//  Direction roomDirection;
-//  bool objectFound;
-//};
-
-//struct room rooms[3];
-//std::vector<room> rooms;
-
 
 int roomCounter = 0;
 
-
-
+/*
+These are all the classes that are used to store the instructions that the zumo follows
+*/
 class Instruction {
 protected:
   std::string type;
@@ -105,7 +94,6 @@ std::vector<Instruction*> instructions;
 
 
 
-
 void setup() {
   // put your setup code here, to run once:
   Serial1.begin(9600);
@@ -120,32 +108,21 @@ void setup() {
   rightInitial = lineSensorValues[0] + 700;
   turnSensorSetup();
   turnSensorReset();
-  instructions.push_back(new StartInsrct());
-  //while(!Serial){}
-  //Serial.println(rightInitial);
-}
+  instructions.push_back(new StartInsrct());  
+}//all the sensors are initilised and the start instriction object is pushed to the vector
 
 void loop() {
-
-
-  //if(!start){
-   // motors.setSpeeds(0,0);
-  //}
-  
-  //turnSensorUpdate();
   
   int incomingByte = 0; // for incoming serial data
 
   if (Serial1.available() > 0) {
     // read the incoming byte:
     incomingByte = Serial1.read();
-    //if (incomingByte == 116){
-    //  start = !start;
-    //  }
     switch(incomingByte){
       //61 =
       //45 -
-      case 116: //t auto move togle
+      case 116: 
+      //t auto move toggle, also sets the counter for the straight
         start = !start;
         if(!start){ motors.setSpeeds(0,0); }else{
           startPos = encoders.getCountsLeft();
@@ -160,16 +137,17 @@ void loop() {
       case 32:  // space character
         motors.setSpeeds(0,0);
         break;
-      case 108: //l
+      case 108: 
+      //l 90 degrees left, pushes back the straight
         instructions.push_back(new Straight(encoders.getCountsLeft() - startPos));
         if(reachedJunction){
-          instructions.push_back(new TJunction("left"));
+          instructions.push_back(new TJunction("left"));  //if its a junction push the junction object instead of a turn
           turn90Left();
           reachedJunction = false;
         }else{
             if(roomFound){
             turnLeft(90);
-            Room *room = new Room((roomCounter + 1), "left");
+            Room *room = new Room((roomCounter + 1), "left"); //if its a turn into a room create a room object set the direction and its id then search the room
             searchRoom(room);
           }else{
             turn90Left();
@@ -177,7 +155,8 @@ void loop() {
           }
         }
       break;
-      case 114: //r
+      case 114: 
+      //r 90 degrees right, pushes back the straight
         instructions.push_back(new Straight(encoders.getCountsLeft() - startPos));
          if(reachedJunction){
           instructions.push_back(new TJunction("right"));
@@ -211,15 +190,15 @@ void loop() {
         break;
         case 115: //s
 
-          motors.setSpeeds((maxSpeed*-1),(maxSpeed*-1));
+          motors.setSpeeds((maxSpeed*-1),(maxSpeed*-1));  //these four commands are the basic movement
 
         break;
-        case 111:
+        case 111: //room found button
           start = false;
-          motors.setSpeeds(0,0);
+          motors.setSpeeds(0,0);  
           roomFound = true;
         break;
-        case 106:
+        case 106: //reached junction button
           start = false;
           motors.setSpeeds(0,0);
           reachedJunction = true;
@@ -401,19 +380,19 @@ void goHome(){
   turnLeft(90);
   turnLeft(90);
 
-for(int i = 0; i < instructions.size(); i++){
-    Serial1.println(instructions.at(i)->getType().c_str());
-  }
-  Serial1.println("-----");
+//for(int i = 0; i < instructions.size(); i++){
+//    Serial1.println(instructions.at(i)->getType().c_str());
+//  }
+ // Serial1.println("-----");
   
   int index = instructions.size() - 1;
   String temp = instructions.at(index)->getType().c_str();
 
   while(temp != "start"){
-    Serial1.println(temp);
+    //Serial1.println(temp);
     
     if(temp == "startTJunc"){
-      Serial1.println("hit T Junc ===========");
+      //Serial1.println("hit T Junc ===========");
       bool researchedRoom = false;
       int juncIndex = index - 1;
       String juncType = instructions.at(juncIndex)->getType().c_str();
@@ -465,14 +444,14 @@ for(int i = 0; i < instructions.size(); i++){
     }
 
     if(temp == "straight"){
-      Serial1.println("hit straight");
+      //Serial1.println("hit straight");
       Straight *s = static_cast<Straight*>(instructions.at(index));
       movefwd(s->getDistance());
     }
 
     
     if(temp == "turn"){
-      Serial1.println("hit turn");
+      //Serial1.println("hit turn");
       Turn *t = static_cast<Turn*>(instructions.at(index));
       String direc = t->getDirection().c_str();
       if(direc == "left"){ turnRight(90); }
@@ -480,7 +459,7 @@ for(int i = 0; i < instructions.size(); i++){
     }
 
     if(temp == "room"){
-      Serial1.println("hit room");
+      //Serial1.println("hit room");
       Room *room = static_cast<Room*>(instructions.at(index));
       if(room->getFound()){
         scanRoomAgain(room->getDirection().c_str());

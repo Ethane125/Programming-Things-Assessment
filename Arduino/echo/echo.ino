@@ -92,6 +92,14 @@ class EndofTJunc : public Instruction {
 public:
   EndofTJunc() { type = "endTJunc"; }
 };
+class StartofTJunc : public Instruction {
+public:
+  StartofTJunc() { type = "startTJunc"; }
+};
+class StartInsrct : public Instruction {
+public:
+  StartInsrct() { type = "start"; }
+};
 
 std::vector<Instruction*> instructions;
 
@@ -112,7 +120,7 @@ void setup() {
   rightInitial = lineSensorValues[0] + 700;
   turnSensorSetup();
   turnSensorReset();
-
+  instructions.push_back(new StartInsrct());
   //while(!Serial){}
   //Serial.println(rightInitial);
 }
@@ -221,10 +229,10 @@ void loop() {
           instructions.push_back(new EndofTJunc());
           endOfTJunction();
         break;
-        case 112: //e end of map
+        case 101: //e end of map
           instructions.push_back(new Straight(encoders.getCountsLeft() - startPos));
-          instructions.push_back(new EndofTJunc());
-          endOfTJunction();
+          //instructions.push_back(new EndofTJunc());
+          goHome();
         break;
     }
 
@@ -400,8 +408,9 @@ void endOfTJunction(){
   String temp = instructions.at(index)->getType().c_str();
   while(temp != "TJunction"){
      Serial.println(instructions.at(index)->getType().c_str());
-    if(instructions.at(index)->getType().c_str() == "room"){
-      index = index - 1;
+    if(temp == "room"){
+      //index = index - 1;
+      Serial.println("ROOM FOUND");
     }else{
       Straight *s = static_cast<Straight*>(instructions.at(index));
       Serial.println(s->getDistance());
@@ -411,6 +420,132 @@ void endOfTJunction(){
     temp = instructions.at(index)->getType().c_str();
   }
   Serial1.println("Reached T junction");
+  instructions.push_back(new StartofTJunc());
+}
+
+void goHome(){
+  turnLeft(90);
+  turnLeft(90);
+
+for(int i = 0; i < instructions.size(); i++){
+    Serial1.println(instructions.at(i)->getType().c_str());
+  }
+  Serial1.println("-----");
+  
+  int index = instructions.size() - 1;
+  String temp = instructions.at(index)->getType().c_str();
+
+  while(temp != "start"){
+    Serial1.println(temp);
+    
+    if(temp == "startTJunc"){
+      Serial1.println("hit T Junc ===========");
+      bool researchedRoom = false;
+      int juncIndex = index - 1;
+      String juncType = instructions.at(juncIndex)->getType().c_str();
+      while(juncType != "TJunction"){
+        //Serial1.println(juncType);
+        if(juncType == "room"){
+          //Serial1.println("HIT room ===========");
+          Room *room = static_cast<Room*>(instructions.at(juncIndex));
+          if(room->getFound()){
+            //Serial1.println("object in room======");
+            while(juncType != "TJunction"){
+              juncIndex = juncIndex - 1;
+              juncType = instructions.at(juncIndex)->getType().c_str();
+            }
+           // Serial1.println(instructions.at(juncIndex)->getType().c_str());
+            juncIndex = juncIndex + 1;
+            //Serial1.println(instructions.at(juncIndex)->getType().c_str());
+            Straight *s = static_cast<Straight*>(instructions.at(juncIndex));
+            movefwd(s->getDistance());
+            juncIndex = juncIndex + 1;
+            //Serial1.println(instructions.at(juncIndex)->getType().c_str());
+            scanRoomAgainTJunc(room->getDirection().c_str());
+            juncIndex = juncIndex - 1;
+            //Serial1.println(instructions.at(juncIndex)->getType().c_str());
+            movefwd(s->getDistance());
+            researchedRoom = true;
+          }
+        }
+        juncIndex = juncIndex - 1;
+        juncType = instructions.at(juncIndex)->getType().c_str();
+      }
+      //Serial1.println(instructions.at(juncIndex)->getType().c_str());
+      TJunction *j = static_cast<TJunction*>(instructions.at(juncIndex));
+      String juncDirec = j->getDirection().c_str();
+      if(researchedRoom){
+        if(juncDirec == "left"){
+          turnRight(90);
+        }else{
+          turnLeft(90);
+        }
+      }else{
+        if(juncDirec == "left"){
+          turnLeft(90);
+        }else{
+          turnRight(90);
+        }
+      }
+      index = juncIndex;
+    }
+
+    if(temp == "straight"){
+      Serial1.println("hit straight");
+      Straight *s = static_cast<Straight*>(instructions.at(index));
+      movefwd(s->getDistance());
+    }
+
+    
+    if(temp == "turn"){
+      Serial1.println("hit turn");
+      Turn *t = static_cast<Turn*>(instructions.at(index));
+      String direc = t->getDirection().c_str();
+      if(direc == "left"){ turnRight(90); }
+      else{ turnLeft(90); }
+    }
+
+    if(temp == "room"){
+      Serial1.println("hit room");
+      Room *room = static_cast<Room*>(instructions.at(index));
+      if(room->getFound()){
+        scanRoomAgain(room->getDirection().c_str());
+      }
+    }
+    
+    index = index - 1;
+    temp = instructions.at(index)->getType().c_str();
+  }
+}
+
+void scanRoomAgainTJunc(String directionRoom){
+  if(directionRoom == "left"){
+          turnLeft(90);
+        }else{
+          turnRight(90);
+        }
+        //move fwd scan move back
+        delay(200);
+         if(directionRoom == "left"){
+          turnLeft(90);
+        }else{
+          turnRight(90);
+        }
+}
+
+void scanRoomAgain(String directionRoom){
+  if(directionRoom == "left"){
+          turnRight(90);
+        }else{
+          turnLeft(90);
+        }
+        //move fwd scan move back
+        delay(200);
+         if(directionRoom == "left"){
+          turnLeft(90);
+        }else{
+          turnRight(90);
+        }
 }
 
 void turnRight(int turn){
